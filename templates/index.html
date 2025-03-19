@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur de prêt</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h2>Simulateur de prêt</h2>
+
+    {% if erreur %}
+        <p class="error">{{ erreur }}</p>
+    {% endif %}
+
+    <form method="POST">
+        <label>Montant emprunté (€) :</label>
+        <input type="number" name="V0" required min="1">
+
+        <label>Taux d'intérêt annuel (%) :</label>
+        <input type="number" name="taux_annuel" required min="0" step="0.01">
+
+        <label>Durée du prêt (années) :</label>
+        <input type="number" name="duree" required min="1">
+
+        <label>Périodicité :</label>
+        <select name="periodicite">
+            <option value="mensuel">Mensuel</option>
+            <option value="trimestriel">Trimestriel</option>
+            <option value="semestriel">Semestriel</option>
+            <option value="annuel">Annuel</option>
+        </select>
+
+        <button type="submit">Calculer</button>
+    </form>
+
+    {% if tableau %}
+    <div class="table-container">
+        <h3>Tableau d'amortissement</h3>
+        <table>
+            <tr>
+                <th>Période</th>
+                <th>Remboursement (€)</th>
+                <th>Intérêts (€)</th>
+                <th>Capital Remboursé (€)</th>
+                <th>Capital Restant (€)</th>
+            </tr>
+            {% for ligne in tableau %}
+            <tr>
+                <td>{{ ligne["Période"] }}</td>
+                <td>{{ ligne["Remboursement"] }}</td>
+                <td>{{ ligne["Intérêts"] }}</td>
+                <td>{{ ligne["Capital Remboursé"] }}</td>
+                <td>{{ ligne["Capital Restant"] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        
+        <h3>Totaux</h3>
+        <ul>
+            <li><strong>Total des remboursements :</strong> {{ totaux["Total des remboursements"] }} €</li>
+            <li><strong>Total des intérêts payés :</strong> {{ totaux["Total des intérêts payés"] }} €</li>
+            <li><strong>Total du capital remboursé :</strong> {{ totaux["Total du capital remboursé"] }} €</li>
+        </ul>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
